@@ -2,6 +2,9 @@
 {% block content %}
     {% load static %}
     <h2> NearBeach API List</h2>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_uuid_modal">
+        New API UUID Key
+    </button>
     <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -30,4 +33,27 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="modal fade" id="new_uuid_modal" tabindex="-1" role="dialog" aria-labelledby="new_uuid_modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New UUID</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="new_uuid_form" enctype="text/plain">
+                        <p>Please enter in the name of the UUID</p>
+                        <p>{{ new_uuid_form.api_description }}</p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

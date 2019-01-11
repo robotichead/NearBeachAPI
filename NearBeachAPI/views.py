@@ -4,6 +4,7 @@ from django.template import loader
 from django.urls import reverse
 
 from NearBeachAPI.models import *
+from NearBeachAPI.forms import *
 
 # Create your views here.
 def delete_uuid(request,api_uuid_id):
@@ -53,21 +54,29 @@ def list_uuid(request):
 
     c = {
         'api_uuid_results': api_uuid_results,
+        'new_uuid_form': new_uuid_form(),
     }
 
     return HttpResponse(t.render(c,request))
 
 
 def new_uuid(request):
-    # only allow super users
-    if request.user.is_superuser == False:
-        return HttpResponseBadRequest("Sorry - you do not have permission to see these pages")
+    # Only in POST and super user
+    if request.method == "POST" and request.user.is_superuser == True:
+        form = new_uuid_form(request.POST)
+        if form.is_valid():
+            #Create new uuid
+            api_uuid_submit=api_uuid(
+                api_description=form.cleaned_data['api_description'],
+                change_user=request.user,
+            )
+            api_uuid_submit.save()
 
-    # Get Data
-
-    # Load the new uuid
-    t = loader.get_template('NearBeachAPI/new_uuid.html')
-
-    c = {}
-
-    return HttpResponse(t.render(c,request))
+            #Return to edit
+            return HttpResponseRedirect(reverse('edit_uuid',args={api_uuid_submit.api_uuid_id}))
+        else:
+            return HttpResponseBadRequest(form.errors)
+        #TEMP
+        return HttpResponseRedirect(reverse('list_uuid'))
+    else:
+        return HttpResponseBadRequest("Nope - there is nothing here.")
