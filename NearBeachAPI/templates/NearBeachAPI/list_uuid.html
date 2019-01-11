@@ -1,0 +1,33 @@
+{% extends './template.html' %}
+{% block content %}
+    {% load static %}
+    <h2> NearBeach API List</h2>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">UUID</th>
+                <th scope="col">Allowed Host</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in api_uuid_results %}
+                <tr>
+                    <td width="40%">
+                        <a href="javascript:void(0)">{{ row.api_uuid_id }}</a>
+                    </td>
+                    <td width="50%">
+                        {% for link in row.api_allowed_host_set.all %}
+                            {% if forloop.first %}
+                                {{ link.allowed_host }}
+                            {% else %}
+                                , {{ link.allowed_host }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td width="10%"><a href="javascript:void(0)"><img src="{% static 'NearBeach/images/icons/trash-2.svg' %}"></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
