@@ -7,6 +7,12 @@ from NearBeachAPI.models import *
 from NearBeachAPI.forms import *
 
 # Create your views here.
+def data(request,destination):
+    #Just sending back blanks at the moment
+    t = loader.get_template('NearBeach/blank.html')
+    c = {}
+    return HttpResponse(t.render(c,request))
+
 def delete_uuid(request,api_uuid_id):
     #Only super user and POST
     if request.method == "POST" and request.user.is_superuser == True:
@@ -28,12 +34,19 @@ def edit_uuid(request,api_uuid_id):
 
     #Get Data
     api_uuid_results = api_uuid.objects.get(api_uuid_id=api_uuid_id)
+    api_allowed_host_results = api_allowed_host.objects.filter(
+        is_deleted="FALSE",
+        api_uuid_id=api_uuid_id,
+    )
 
     #Get Template
     t = loader.get_template('NearBeachAPI/edit_uuid.html')
 
     c = {
         'api_uuid_results': api_uuid_results,
+        'new_allowed_host_form': new_allowed_host_form(),
+        'api_allowed_host_results': api_allowed_host_results,
+        'current_host': request.get_host(),
     }
 
     return HttpResponse(t.render(c,request))
@@ -60,6 +73,30 @@ def list_uuid(request):
     return HttpResponse(t.render(c,request))
 
 
+def new_allowed_host(request,api_uuid_id):
+    # Only in POST and super user
+    if request.method == "POST" and request.user.is_superuser == True:
+        form = new_allowed_host_form(request.POST)
+        if form.is_valid():
+            api_allowed_host_submit = api_allowed_host(
+                allowed_host=form.cleaned_data['allowed_host'],
+                change_user=request.user,
+                api_uuid_id=api_uuid_id,
+            )
+            api_allowed_host_submit.save()
+
+            #Return blank page
+            t = loader.get_template('NearBeach/blank.html')
+            c = {}
+            return HttpResponse(t.render(c,request))
+        else:
+            print("FORM ERRORS!!!")
+            print(form.errors)
+            return HttpResponseBadRequest(form.errors)
+    else:
+        return HttpResponseBadRequest("Sorry - you can not do that here")
+
+
 def new_uuid(request):
     # Only in POST and super user
     if request.method == "POST" and request.user.is_superuser == True:
@@ -72,8 +109,10 @@ def new_uuid(request):
             )
             api_uuid_submit.save()
 
-            #Return to edit
-            return HttpResponseRedirect(reverse('edit_uuid',args={api_uuid_submit.api_uuid_id}))
+            #Send back blank page - AJAX will now allow us to render page
+            t = loader.get_template('NearBeach/blank.html')
+            c = {}
+            return HttpResponse(t.render(c,request))
         else:
             return HttpResponseBadRequest(form.errors)
         #TEMP

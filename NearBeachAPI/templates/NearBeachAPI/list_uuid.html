@@ -8,16 +8,16 @@
     <table class="table table-striped table-hover">
         <thead>
             <tr>
-                <th scope="col">UUID</th>
-                <th scope="col">Allowed Host</th>
-                <th scope="col">Delete</th>
+                <th scope="col" width="60%">UUID</th>
+                <th scope="col" width="30%">Allowed Host</th>
+                <th scope="col" width="10%">Delete</th>
             </tr>
         </thead>
         <tbody>
             {% for row in api_uuid_results %}
                 <tr>
                     <td width="40%">
-                        <a href="javascript:void(0)">{{ row.api_uuid_id }}</a>
+                        <a href="{% url 'edit_uuid' row.api_uuid_id %}">{{ row.api_uuid_id }} - {{ row.api_description }}</a>
                     </td>
                     <td width="50%">
                         {% for link in row.api_allowed_host_set.all %}
@@ -34,6 +34,7 @@
         </tbody>
     </table>
 
+    <!-- NEW API Key -->
     <div class="modal fade" id="new_uuid_modal" tabindex="-1" role="dialog" aria-labelledby="new_uuid_modal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -50,10 +51,40 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary" onclick="submit_uuid()">Save changes</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $("#new_uuid_form").on('submit', function(e) {
+            e.preventDefault();
+        });
+
+        function submit_uuid() {
+            //Send data to the database
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+            $.ajax({
+                url: 'new_uuid/',
+                data: $("#new_uuid_form").serialize(),
+                type: "POST",
+                success: function(data) {
+                    //Reload page
+                    window.location.reload();
+                },
+                error: function() {
+                    alert("Sorry - but the new UUID did not work.");
+                }
+            })
+        }
+    </script>
 {% endblock %}

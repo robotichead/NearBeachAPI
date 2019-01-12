@@ -1,5 +1,109 @@
 {% extends './template.html' %}
 {% block content %}
+{% load static %}
     <h2>Edit API Connection</h2>
+
+    <h4>UUID Table</h4>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col" width="10%">Object</th>
+                <th scope="col" width="90%">URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Project</td>
+                <td>{{ current_host }}/API/data/project/</td>
+            </tr>
+            <tr>
+                <td>Organisation</td>
+                <td>{{ current_host }}/API/data/organisation/</td>
+            </tr>
+            <tr>
+                <td>Customer</td>
+                <td>{{ current_host }}/API/data/customer/</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>Allowed Hosts</h4>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#new_allowed_host_modal">
+        New Allowed Hosts
+    </button>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <td width="80%">Host</td>
+                <td width="20%">Remove</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in api_allowed_host_results %}
+                <tr>
+                    <td>{{ row.allowed_host }}</td>
+                    <td><img src="{% static 'NearBeach/images/icons/trash-2.svg' %}"></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <a href="{% url 'list_uuid' %}">Back to list</a>
+
+
+    <!-- NEW Allowed Host -->
+    <div class="modal fade" id="new_allowed_host_modal" tabindex="-1" role="dialog" aria-labelledby="new_allowed_host_modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Allowed Host</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="new_allowed_host_form" enctype="text/plain">
+                        <p>Please enter URL of the allowed host. * will be wildcards</p>
+                        <p>{{ new_allowed_host_form.allowed_host }}</p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="submit_allowed_host()">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("#new_allowed_host_form").on('submit',function(e){
+            e.preventDefault();
+        });
+
+        function submit_allowed_host() {
+            //Send data to the database
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+
+            $.ajax({
+                url: '../new_allowed_host/{{ api_uuid_results.api_uuid_id }}/', //BUG HERE! Javascript is trying to send data to https://.../API/edit_uuid/new_allowed_host/[UUID], used ../ to get around that
+                data: $("#new_allowed_host_form").serialize(),
+                type: "POST",
+                success: function(data) {
+                    //Reload page
+                    window.location.reload();
+                },
+                error: function() {
+                    alert("Sorry - but the new allowed host did not work.");
+                }
+            });
+        }
+    </script>
 
 {% endblock %}
