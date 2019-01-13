@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+from NearBeach.models import project, organisation, customer
+from django.http import JsonResponse
+from django.core import serializers
 
 from NearBeachAPI.models import *
 from NearBeachAPI.forms import *
@@ -11,7 +14,20 @@ def data(request,destination):
     #Just sending back blanks at the moment
     t = loader.get_template('NearBeach/blank.html')
     c = {}
-    return HttpResponse(t.render(c,request))
+
+    #TEMP CODE#
+    data_results = project.objects.filter(is_deleted="FALSE")
+    data_json = serializers.serialize('json',data_results)
+    return HttpResponse(data_json, content_type='application/json')
+
+    """
+    qs = SomeModel.objects.all()
+    qs_json = serializers.serialize('json', qs)
+    return HttpResponse(qs_json, content_type='application/json')
+    """
+
+    #return HttpResponse(t.render(c,request))
+    #return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def delete_uuid(request,api_uuid_id):
     #Only super user and POST
