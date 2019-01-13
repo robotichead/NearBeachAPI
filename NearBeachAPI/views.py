@@ -16,17 +16,11 @@ def data(request,destination):
     c = {}
 
     #TEMP CODE#
-    data_results = project.objects.filter(is_deleted="FALSE")
-    data_json = serializers.serialize('json',data_results)
-    return HttpResponse(data_json, content_type='application/json')
+    #data_results = project.objects.filter(is_deleted="FALSE")
+    #data_json = serializers.serialize('json',data_results)
+    #return HttpResponse(data_json, content_type='application/json')
 
-    """
-    qs = SomeModel.objects.all()
-    qs_json = serializers.serialize('json', qs)
-    return HttpResponse(qs_json, content_type='application/json')
-    """
-
-    #return HttpResponse(t.render(c,request))
+    return HttpResponse(t.render(c,request))
     #return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def delete_uuid(request,api_uuid_id):
