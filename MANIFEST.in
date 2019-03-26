@@ -1,2 +1,9 @@
-#Include all files
-include NearBeachAPI/templates/NearBeachAPI/*
+include *.py *.txt *.rst *.html
+recursive-include NearBeachAPI *
+recursive-include NearBeachAPI/templates *
+recursive-include NearBeachAPI/templates/NearBeachAPI *
+global-exclude *.pyc __pycache__
+
+
+# added by check_manifest.py
+include LICENSE

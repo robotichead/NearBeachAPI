@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="NearBeachAPI",
-    version="0.0.4",
+    version="0.0.6",
     author="Luke Christopher Clarke",
     author_email="luke@nearbeach.org",
     description="The optional API module for NearBeach",
@@ -26,4 +26,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    include_package_data=True,
 )
