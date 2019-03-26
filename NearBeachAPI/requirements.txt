@@ -1,3 +1,2 @@
 #Requirements for NearBeach API
 djangorestframework
-django-oauth-toolkit
