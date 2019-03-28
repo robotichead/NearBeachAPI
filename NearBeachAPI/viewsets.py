@@ -123,15 +123,15 @@ class RequirementItemViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = requirement_item.objects.filter(
             is_deleted="FALSE",
-            requirement_item_id__in=object_assignment.objects.filter(
+            requirement_id__in=object_assignment.objects.filter(
                 is_deleted="FALSE",
-                requirement_item_id__isnull=False,
+                requirement_id__isnull=False,
                 group_id__in=user_group.objects.filter(
                     is_deleted="FALSE",
                     username=request.user,
                     group_id__isnull=False,
                 ).values('group_id')
-            ).values('requirement_item_id')
+            ).values('requirement_id')
         )
         serializer = RequirementItemSerializer(queryset, many=True)
         return Response(serializer.data)
