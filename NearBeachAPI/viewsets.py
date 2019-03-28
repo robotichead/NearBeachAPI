@@ -2,7 +2,7 @@ from NearBeach.models import *
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 """
@@ -12,7 +12,7 @@ Rules
 2. Can only list those objects that user has access to
 """
 class CustomerViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
@@ -23,7 +23,7 @@ class CustomerViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 class OrganisationViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
@@ -35,7 +35,7 @@ class OrganisationViewSet(viewsets.ViewSet):
 
 
 class ProjectViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
@@ -55,7 +55,7 @@ class ProjectViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 class QuoteViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
@@ -75,7 +75,7 @@ class QuoteViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 class RequestForChangeViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
@@ -96,7 +96,7 @@ class RequestForChangeViewSet(viewsets.ViewSet):
 
 
 class RequirementViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
@@ -117,7 +117,7 @@ class RequirementViewSet(viewsets.ViewSet):
 
 
 class RequirementItemViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
@@ -138,7 +138,7 @@ class RequirementItemViewSet(viewsets.ViewSet):
 
 
 class TaskViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
@@ -159,7 +159,7 @@ class TaskViewSet(viewsets.ViewSet):
 
 
 class UserViewSet(viewsets.ViewSet):
-    authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,SessionAuthentication, BasicAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def list(self, request):
