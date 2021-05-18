@@ -1,2 +1,2 @@
 #Requirements for NearBeach API
-djangorestframework
+djangorestframework>=3.11.2
